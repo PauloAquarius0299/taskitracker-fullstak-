@@ -1,42 +1,78 @@
-'use client';
+"use client";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-interface TasksListDTO {
-    id: number;
-    title: string;
-    description: string;
+interface TaskListDto {
+  id: string;
+  title: string;
+  description: string;
+  count: number;
+  progress: number;
+  tasks: TaskDto[];
 }
 
-const fetchTasksLists = async (): Promise<TasksListDTO[]> => {
-    try {
-        const res = await axios.get('http://localhost:8080/task-lists');
-        return res.data;
-    } catch (error) {
-        console.error("Erro ao buscar a lista de tarefas", error);
-        return [];
-    }
+interface TaskDto {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+const TasksListContent = ({ taskListId }: { taskListId: string }) => {
+  const [taskList, setTaskList] = useState<TaskListDto | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTaskList = async () => {
+      try {
+        const response = await axios.get<TaskListDto>(
+          `http://localhost:8080/task-lists/${taskListId}`
+        );
+        setTaskList(response.data);
+      } catch (err) {
+        setError("Erro ao buscar a lista de tarefas");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTaskList();
+  }, [taskListId]);
+
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  if (!taskList) {
+    return <p>Nenhuma lista de tarefas encontrada.</p>;
+  }
+
+  return (
+    <div className="w-full space-y-6">
+      <h2 className="text-2xl font-bold text-white">{taskList.title}</h2>
+      <p className="text-gray-300">{taskList.description}</p>
+      <div className="mt-4">
+        <ul className="mt-2 space-y-2">
+          {taskList.tasks.map((task) => (
+            <li key={task.id} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={task.completed}
+                readOnly
+                className="form-checkbox h-5 w-5 text-cyan-600"
+              />
+              <span className="text-gray-300">{task.title}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 };
 
-export default function TasksListContent() {
-    const [tasksLists, setTasksLists] = useState<TasksListDTO[]>([]);
-
-    useEffect(() => {
-        fetchTasksLists().then(setTasksLists);
-    }, []);
-
-    return (
-        <div className="p-6 max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Lista de Tarefas</h1>
-            <ul className="space-y-4">
-                {tasksLists.map((taskList) => (
-                    <li key={taskList.id} className="p-4 border rounded-lg shadow-md">
-                        <h2 className="text-lg font-semibold">{taskList.title}</h2>
-                        <p className="text-gray-600">{taskList.description}</p>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-}
+export default TasksListContent;
