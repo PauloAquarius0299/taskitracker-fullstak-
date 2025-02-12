@@ -1,22 +1,24 @@
-import axios from 'axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-const api = axios.create({
-    baseURL: 'http://localhost:8080',
-})
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'POST') {
+    const backendUrl = 'http://localhost:8080/task-lists';
 
-export interface TasksListDTO {
-    id: number;
-    title: string;
-    description: string;
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req.body),
+    });
 
-}
-
-export const TasksLists = async (): Promise<TasksListDTO> => {
-    try {
-        const res = await api.get('/api/tasks-lists');
-        return res.data;
-    } catch (error) {
-        console.error("Erro ao buscar a lista de tarefas", error);
-        throw error;
-    }
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 }
