@@ -1,12 +1,12 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import { ArrowLeft, Pen, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTaskList } from "../../lib/useTaskList";
 import { EditModal } from "../../components/EditModal";
 import { TaskList } from "../../components/TaskList";
+import Tasks from "./tasks/page";
 
 const DetailsPage = () => {
   const params = useParams();
@@ -62,7 +62,7 @@ const DetailsPage = () => {
   };
 
   if (loading) {
-    return <p>Carregando...</p>;
+    return <p>Carregando...</p>
   }
 
   if (error) {
@@ -74,42 +74,60 @@ const DetailsPage = () => {
   }
 
   return (
-    <div className="flex h-full max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card shadow-2xl bg-[#0c0c0c77] p-10 text-center flex-col items-center justify-center">
-      <div className="w-full flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">{taskList.title}</h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-cyan-600 hover:text-cyan-800"
-          >
-            <Pen size={24} />
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:text-red-800"
-          >
-            <Trash size={24} />
-          </button>
+    <div className="flex items-center justify-center min-h-screen p-4 bg-black">
+      <div className="w-full max-w-4xl flex flex-col bg-[#0c0c0cdd] p-8">
+        <div className="w-full flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">{taskList.title}</h2>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-cyan-500 hover:text-cyan-400 transition duration-200"
+            >
+              <Pen size={24} />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="text-red-500 hover:text-red-400 transition duration-200"
+            >
+              <Trash size={24} />
+            </button>
+          </div>
+        </div>
+  
+        {/* Descrição da lista de tarefas */}
+        <p className="text-gray-300 mb-6">{taskList.description}</p>
+  
+        {/* Lista de tarefas */}
+        <div className="flex-1 overflow-y-auto mb-6">
+          <TaskList tasks={tasks} />
+        </div>
+  
+        {/* Modal de edição */}
+        {isEditing && (
+          <EditModal
+            title={title}
+            description={description}
+            onSave={handleUpdate}
+            onCancel={() => setIsEditing(false)}
+          />
+        )}
+  
+        {/* Botão de voltar */}
+        <button
+          onClick={handleNavigate}
+          className="flex items-center mt-6 text-white text-lg hover:text-cyan-400 transition duration-200"
+        >
+          <ArrowLeft className="mr-2" /> Voltar
+        </button>
+  
+        {/* Componente de tarefas */}
+        <div className="w-full mt-6">
+          <Tasks />
         </div>
       </div>
-      <p className="text-gray-300">{taskList.description}</p>
-      <TaskList tasks={tasks} />
-      {isEditing && (
-        <EditModal
-          title={title}
-          description={description}
-          onSave={handleUpdate}
-          onCancel={() => setIsEditing(false)}
-        />
-      )}
-      <button
-        onClick={handleNavigate}
-        className="flex items-center mt-4 text-white text-lg hover:text-cyan-600"
-      >
-        <ArrowLeft className="mr-2" /> Voltar
-      </button>
     </div>
   );
+  
 };
 
 export default DetailsPage;

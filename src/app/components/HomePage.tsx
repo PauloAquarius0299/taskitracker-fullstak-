@@ -68,7 +68,7 @@ const HomePage = () => {
           onClick={handleNavigate}
           className="bg-cyan-600 text-white text-2xl font-semibold px-8 py-4 rounded-xl hover:bg-cyan-800"
         >
-          + Criar nova tarefa
+          + Criar novo topico
         </button>
       </div>
       <div className="w-full max-w-4xl space-y-4">

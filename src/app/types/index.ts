@@ -8,7 +8,12 @@ export interface TaskListDto {
   }
   
   export interface TaskDto {
-    id: string;
+    id?: string;
     title: string;
-    completed: boolean;
+    description: string;
+    completed?: boolean;
+    dueDate: string | null;
+    priority: "HIGH" | "MEDIUM" | "LOW";
+    status: "OPEN" | "CLOSED";
   }
+  
