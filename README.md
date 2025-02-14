@@ -1,4 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tudo List
+Criando projeto fullstack um tudo list, plataforma de gerenciar tarefas online
+![Captura de Tela (774)](https://github.com/user-attachments/assets/2745e087-f4c6-43ee-9c9b-67a10942d766)
+## Introdução 
+Frontend desenvolvido com Next.js, TypeScript e Tailwind CSS, utilizando o DeepSeek para criar um design minimalista e responsivo. A plataforma oferece uma interação intuitiva para o usuário. Foram criados componentes reutilizáveis com Axios para facilitar a comunicação com o servidor/backend desenvolvido em Java Spring Boot.
+
+Backend: Desenvolvi uma API REST com Java e Spring Boot para atender às necessidades do frontend e criar uma plataforma funcional e dinâmica. Focando principalmente na lógica do servidor, criei classes de entidade para Task e TaskList e repositórios com JPA para gerenciar o banco de dados PostgreSQL. Em Service, criei uma interface que define os métodos principais para o serviço de gerenciamento de listas de tarefas, e em ServiceImpl, implementei as interfaces e os comportamentos desses métodos. No Controller, desenvolvi os métodos e o corpo das requisições para atender aos endpoints da aplicação.
+## Ferramentas 
+* TypeScript
+* Java
+* Spring Boot
+* Nextjs
+* Tailwindcss
+* PostgreSQL
+
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`c
+
+reate-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
